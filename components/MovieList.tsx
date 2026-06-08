@@ -12,7 +12,7 @@ const MovieList = ({ movies }: MovieListProps) => {
   // console.log('movies:', movies);
   return (
     <>
-      <ul className="flex flex-col divide-y divide-gray-400 border border-gray-400 mx-8 mt-4"> 
+      <ul className="flex flex-col divide-y divide-gray-400 border border-gray-400 mr-8 mt-)"> 
           {movies.map((movie, i) => (
             <MovieListEntry key={movie.id} movie={movie} />
           ))}
