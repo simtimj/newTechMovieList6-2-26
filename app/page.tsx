@@ -7,37 +7,59 @@ import Search from "@/components/Search";
 import { useState } from "react";
 import WatchTabs from "@/components/WatchTabs";
 
+import { MovieType } from "./types";
+import { MovieListProps } from "../components/MovieList";
+import { watch } from "fs";
+
 export default function Home() {
 
-  interface Movie {
-    id: number
-    title: string
-  }
 
   
-  let [allMovies, setAllMovies] = useState<Movie[]>(mockMovies);
+  let [allMovies, setAllMovies] = useState<MovieType[]>(mockMovies);
   let [searchText, setSearchText] = useState<string>("");
   let [addText, setAddText] = useState<string>("");
+  let [watchFilter , setWatchFilter] = useState<string>("");
 
   // all filters
-  let filterMovies = (): Movie[] => {
-    // searchFilter
+  let filterMovies = () => {
     
     let newMovies = [...allMovies];
 
+    // search
     newMovies = newMovies.filter((movie) => {
       return (movie.title.toLowerCase()).includes(searchText.toLowerCase());
     })
+
+    if (watchFilter == "Watched") {
+      newMovies = newMovies.filter((movie) => {
+        return movie.watched == true;
+      })
+    } else if (watchFilter == "To Watch")
+      newMovies = newMovies.filter((movie) => {
+        return movie.watched == false;
+      })
+    
     return newMovies;   
   }
 
   let addMovies = (addMoviesTitle: string) => {
+    if (addMoviesTitle.length == 0) {
+      return "No movie title";
+    }
+
     let newMovies = [...allMovies];
-    let newMovie : Movie = {
+    let newMovie: MovieType = {
       id: newMovies.length,
-      title: addMoviesTitle
+      title: addMoviesTitle,
+      watched: false
     }
     newMovies.push(newMovie);
+    setAllMovies(newMovies);
+  }
+
+  let changeWatchState = (id: number) => {
+    let newMovies = [...allMovies];
+    newMovies[id].watched = !(newMovies[id].watched)
     setAllMovies(newMovies);
   }
 
@@ -54,7 +76,9 @@ export default function Home() {
     <div
       className="flex flex-row items-center mt-4"
     >
-        <WatchTabs />
+        <WatchTabs
+          setWatchFilter={setWatchFilter}
+        />
         <Search 
           setSearchText={setSearchText}
         />
@@ -63,7 +87,12 @@ export default function Home() {
     
     
     <MovieList 
-      movies={filterMovies().length ? filterMovies() : [{title: `No Movies matching ${searchText}`, id: 0} ]}
+      movies={
+        filterMovies().length ? 
+          filterMovies() : 
+          [{title: `No Movies matching ${searchText}`, id: 0} ]
+      }
+      changeWatchState={changeWatchState}
     />
   </div>
 )

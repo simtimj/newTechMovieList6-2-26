@@ -15,7 +15,7 @@ let Search = ({setSearchText}: SearchProps) => {
   return (
     <div>
       <form
-        className="flex flex-row w-0.5 ml-2"
+        className="flex flex-row w-1 ml-2"
         onSubmit={(e) => { 
           setSearchText(inputText) 
           e.preventDefault();

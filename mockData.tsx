@@ -1,32 +1,31 @@
-
-
-interface Movie {
-  id: number
-  title: string
-}
-
+import {MovieType} from "@/app/types"
 
 // array of objects
-let movies: Array<Movie> = [
+let movies: MovieType[] = [
   { 
     id: 0,
-    title: 'Mean Girls' 
+    title: 'Mean Girls',
+    watched: false
   },
   { 
     id: 1,
-    title: 'Hackers' 
+    title: 'Hackers',
+    watched: false
   },
   {
     id: 2,
-    title: 'The Grey' 
+    title: 'The Grey',
+    watched: false
   },
   {
     id: 3,
-    title: 'Sunshine' 
+    title: 'Sunshine',
+    watched: false
   },
   {
     id: 4,
-    title: 'Ex Machina' 
+    title: 'Ex Machina',
+    watched: false
   },
 ];
 
