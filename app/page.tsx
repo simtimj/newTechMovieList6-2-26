@@ -22,7 +22,6 @@ export default function Home() {
 
   // all filters
   let filterMovies = () => {
-    
     let newMovies = [...allMovies];
 
     // search
@@ -30,6 +29,7 @@ export default function Home() {
       return (movie.title.toLowerCase()).includes(searchText.toLowerCase());
     })
 
+    // watch filter
     if (watchFilter == "Watched") {
       newMovies = newMovies.filter((movie) => {
         return movie.watched == true;
@@ -51,7 +51,8 @@ export default function Home() {
     let newMovie: MovieType = {
       id: newMovies.length,
       title: addMoviesTitle,
-      watched: false
+      watched: false,
+      detailedView: false
     }
     newMovies.push(newMovie);
     setAllMovies(newMovies);
@@ -60,6 +61,12 @@ export default function Home() {
   let changeWatchState = (id: number) => {
     let newMovies = [...allMovies];
     newMovies[id].watched = !(newMovies[id].watched)
+    setAllMovies(newMovies);
+  }
+
+  let changeView = (id: number) => {
+    let newMovies = [...allMovies];
+    newMovies[id].detailedView = !(newMovies[id].detailedView)
     setAllMovies(newMovies);
   }
 
@@ -93,6 +100,7 @@ export default function Home() {
           [{title: `No Movies matching ${searchText}`, id: 0} ]
       }
       changeWatchState={changeWatchState}
+      changeView={changeView}
     />
   </div>
 )
