@@ -4,24 +4,68 @@ import mockMovies from "@/mockData"
 import AddMovies from "@/components/AddMovies";
 import MovieList from "@/components/MovieList";
 import Search from "@/components/Search";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import WatchTabs from "@/components/WatchTabs";
 
 import { MovieType } from "./types";
 import { MovieListProps } from "../components/MovieList";
 import { watch } from "fs";
 
+
 export default function Home() {
-
-
-  
-  let [allMovies, setAllMovies] = useState<MovieType[]>(mockMovies);
+  let [allMovies, setAllMovies] = useState(mockMovies);
   let [searchText, setSearchText] = useState<string>("");
   let [addText, setAddText] = useState<string>("");
   let [watchFilter , setWatchFilter] = useState<string>("");
 
+
+      useEffect(() => {
+        const options = {
+          method: 'GET',
+          headers: {
+            accept: 'application/json',
+            Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmZjQ3ZGI5NWQwYmYzOTM0NWFkMWE1MGFlNjM4MGVlMCIsIm5iZiI6MTU2MDU2Njk0NS4wNjQsInN1YiI6IjVkMDQ1Y2ExMGUwYTI2MGIwYWNkOGViZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.VUJFsPnVEobP-KM-Aw7zQtVwb_cvyWryFPQSaYhBW8Q'
+          }
+        };
+
+        let cleansedMovies = [];
+
+        fetch('https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1', options)
+          .then(res => res.json())
+          .then(res => {
+            let newMovies = res.results;
+            // console.log(456, newMovies)
+            for (let i = 0; i < newMovies.length; i++) {
+              let movie = res.results[i];
+
+              let newMovie = {
+                id: i,
+                title: movie.title,
+                watched: false,
+                detailedView: false,
+                year: movie.release_date.split("-")[0],
+                runtime: movie.popularity,
+                metascore: movie.vote_average,
+                imdbRating: movie.vote_count
+              }
+              cleansedMovies.push(newMovie);
+            }
+            setAllMovies(cleansedMovies);
+          })
+          .catch(err => console.error(err));          
+      }, [])
+
+      
+
+
+
+
+
+
   // all filters
   let filterMovies = () => {
+    console.log('...allMovies:', allMovies);
+
     let newMovies = [...allMovies];
 
     // search
@@ -91,8 +135,6 @@ export default function Home() {
         />
         
     </div>
-    
-    
     <MovieList 
       movies={
         filterMovies().length ? 
