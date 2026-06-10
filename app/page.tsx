@@ -20,52 +20,24 @@ export default function Home() {
 
 
       useEffect(() => {
-        const options = {
-          method: 'GET',
-          headers: {
-            accept: 'application/json',
-            Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmZjQ3ZGI5NWQwYmYzOTM0NWFkMWE1MGFlNjM4MGVlMCIsIm5iZiI6MTU2MDU2Njk0NS4wNjQsInN1YiI6IjVkMDQ1Y2ExMGUwYTI2MGIwYWNkOGViZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.VUJFsPnVEobP-KM-Aw7zQtVwb_cvyWryFPQSaYhBW8Q'
-          }
-        };
+        // just gotta move all of this stuff to the fastAPI server
 
-        let cleansedMovies = [];
-
-        fetch('https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1', options)
-          .then(res => res.json())
-          .then(res => {
-            let newMovies = res.results;
-            // console.log(456, newMovies)
-            for (let i = 0; i < newMovies.length; i++) {
-              let movie = res.results[i];
-
-              let newMovie = {
-                id: i,
-                title: movie.title,
-                watched: false,
-                detailedView: false,
-                year: movie.release_date.split("-")[0],
-                runtime: movie.popularity,
-                metascore: movie.vote_average,
-                imdbRating: movie.vote_count
-              }
-              cleansedMovies.push(newMovie);
-            }
-            setAllMovies(cleansedMovies);
-          })
-          .catch(err => console.error(err));          
+        try {
+          fetch("http://localhost:8000/movies")
+            .then(res => res.json())
+            .then(res => {
+              setAllMovies(res)
+            });   
+        } catch(e) {
+          console.log("Error:", e)
+        }
+            
       }, [])
 
       
-
-
-
-
-
-
   // all filters
   let filterMovies = () => {
-    console.log('...allMovies:', allMovies);
-
+    console.log('allMovies:', allMovies);
     let newMovies = [...allMovies];
 
     // search
